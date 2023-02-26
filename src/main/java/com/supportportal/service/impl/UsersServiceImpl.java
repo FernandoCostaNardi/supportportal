@@ -5,6 +5,7 @@ import com.supportportal.domain.Users;
 import com.supportportal.exception.domain.EmailExistException;
 import com.supportportal.exception.domain.UsernameExistException;
 import com.supportportal.repository.UsersRepository;
+import com.supportportal.service.EmailService;
 import com.supportportal.service.LoginAttemptService;
 import com.supportportal.service.UserService;
 import org.apache.commons.lang3.RandomStringUtils;
@@ -20,6 +21,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 import java.util.Date;
 import java.util.List;
@@ -41,6 +43,9 @@ public class UsersServiceImpl implements UserService, UserDetailsService {
 
     @Autowired
     private LoginAttemptService loginAttemptService;
+
+    @Autowired
+    private EmailService emailService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -72,7 +77,7 @@ public class UsersServiceImpl implements UserService, UserDetailsService {
     }
 
     @Override
-    public Users register(String firstName, String lastName, String username, String email) throws EmailExistException, UsernameExistException {
+    public Users register(String firstName, String lastName, String username, String email) throws EmailExistException, UsernameExistException, MessagingException {
         validateNewUsernameAndEmail(StringUtils.EMPTY, username, email);
         Users user = new Users();
         user.setUserId(generateUserId());
@@ -91,6 +96,7 @@ public class UsersServiceImpl implements UserService, UserDetailsService {
         user.setProfileImageUrl(getTemporaryProfileImageUrl());
         usersRepository.save(user);
         LOGGER.info("New user password: " + password);
+        emailService.sendNewPasswordEmail(firstName, password, email);
         return user;
     }
 
