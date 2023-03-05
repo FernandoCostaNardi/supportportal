@@ -37,7 +37,8 @@ import static com.supportportal.constant.FileConstant.*;
 import static com.supportportal.constant.UserImplConstant.*;
 import static com.supportportal.enumeration.Role.ROLE_USER;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
-import static jdk.internal.joptsimple.internal.Strings.EMPTY;
+import static org.apache.commons.lang3.StringUtils.EMPTY;
+
 
 @Service
 @Transactional
@@ -83,7 +84,7 @@ public class UsersServiceImpl implements UserService, UserDetailsService {
 
     @Override
     public Users register(String firstName, String lastName, String username, String email) throws EmailExistException, UsernameExistException, MessagingException {
-        validateNewUsernameAndEmail(StringUtils.EMPTY, username, email);
+        validateNewUsernameAndEmail(EMPTY, username, email);
         Users user = new Users();
         user.setUserId(generateUserId());
         user.setFirstName(firstName);
