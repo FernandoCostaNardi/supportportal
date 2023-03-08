@@ -2,6 +2,7 @@ package com.supportportal.filter;
 
 import com.supportportal.utility.JWTTokenProvider;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -20,10 +21,10 @@ import static com.supportportal.constant.SecurityConstant.OPTIONS_HTTP_METHOD;
 import static com.supportportal.constant.SecurityConstant.TOKEN_PREFIX;
 import static org.springframework.http.HttpStatus.OK;
 
-@RequiredArgsConstructor
 @Component
 public class JwtAuthorizationFilter extends OncePerRequestFilter {
 
+    @Autowired
     private JWTTokenProvider jwtTokenProvider;
 
     @Override
